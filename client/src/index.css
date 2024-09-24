@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.img1{
+    background-image: url('./Images/New-BMW-X3-Front.jpg');
+}
+.img2{
+    background-image: url(https://www.bmw.in/content/dam/bmw/marketIN/bmw_in/all-models/i-series/i4/2023/1680x756.jpg/jcr:content/renditions/cq5dam.resized.img.1680.large.time1689668730065.jpg);
+}
+.img3{
+
+    background-image: url(https://miro.medium.com/v2/resize:fit:1100/format:webp/0*KnCJmISCtgSE1ddb);
+}
+
+.img4{
+    background-image: url(./Images/bmw12.jpg);
+}
