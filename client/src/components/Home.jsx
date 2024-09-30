@@ -1,5 +1,6 @@
-
+import Models from '../components/Models'
 function Home() {
+
   return (
     <div className="">
 
@@ -13,7 +14,7 @@ function Home() {
       </div>
 
       {/* Second Banner */}
-      <div className='img2 min-h-screen bg-cover h-[300px] '>
+      <div className='mt-20 img2 min-h-screen bg-cover h-[300px] '>
         <div className='py-24'>
         </div>
       </div>
@@ -72,6 +73,10 @@ function Home() {
         <h1 className="text-xl font-sans  mr-20 "> offers available across the BMW range</h1>
           <button className="mt-9 hover:ring-2 ml-40 text-xl font-semibold text-BLACK ring-1 py-2 ring-black px-10 ">  Know More </button>
         </div>
+      </div>
+      <div className="text-xl ml-28 flex gap-12">
+        <h1>FIND YOUR BMW</h1>
+        <a className='' href="Models">All Models</a>
       </div>
     
     </div>

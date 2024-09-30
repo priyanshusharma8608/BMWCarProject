@@ -22,10 +22,10 @@ function Models() {
 
   return (
     <div className="bg-gray-500 h-full"><br/><br/>
-      <h1 className='text-6xl font-thin px-9 py-9 text-white font-semibold  '>
+      <h1 className='text-6xl font-thin px-9 py-9 text-white font-semibold underline-offset-4 '>
         FIND YOUR BMW
       </h1>
-      <ul className='flex items-center gap-7 px-20 text-white underline-offset-4'>
+      <ul className='flex items-center gap-7 px-20 text-white  '>
         <li className='hover:underline cursor-pointer'>BMW i</li>
         <li className='hover:underline cursor-pointer'>X</li>
         <li className='hover:underline cursor-pointer'>M</li>
