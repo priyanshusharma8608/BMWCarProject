@@ -50,6 +50,7 @@ function Navbar() {
                 (<i onClick={handleChane} className="fa-solid fa-bars text-3xl block cursor-pointer" />)
             }
           </div>
+        
 
           <div className={`absolute x1:hidden top-[70px] left-0 w-full bg-gray-400 flex flex-col items-center gap-6 pb-5 font-semibold text-lg transform transition-transform ${isOpenMenu ? "opacity-100" : "opacity-0"}`} >
 

@@ -3,20 +3,29 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 const { errorHandle } = require('../errorhandling/errorHandling');
 const usermodels = require('../models/usermodels');
+const cloudinary = require('cloudinary').v2;
 require('dotenv').config()
+
+cloudinary.config({
+    cloud_name: process.env.Cloudname,
+    api_key: process.env.APIkey,
+    api_secret: process.env.APIsecret
+});
 
 
 module.exports.CreaterUser = async (req, res) => {
     try {
 
         const data = req.body;
-
-
+        const img = req.file;
+        const imgURL = await cloudinary.uploader.upload(img.path)
+       
         if (data.password == undefined) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
         if (data.role == 'admin' || data.role == 'shopkeeper') return res.status(400).send({ status: false, msg: 'Invalid Role' })
 
         const passwordBcrypt = await bcrypt.hash(data.password, 10)
         req.body.password = passwordBcrypt
+        req.body.profileImg = imgURL.secure_url;
         req.body.role = 'user'
 
         const CreateUserDataDB = await UserModel.create(data)
@@ -34,7 +43,7 @@ module.exports.LogInUser = async (req, res) => {
 
         if (data.password == undefined) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
 
-        const checkemail = await UserModel.findOne({ email: data.email })
+        const checkemail = await UserModel.findOne({ email: data.email, role:'user' })
         if (!checkemail) return res.status(404).send({ status: false, msg: 'User not found pls SignUp first' })
 
         const CheckPass = await bcrypt.compare(data.password, checkemail.password)

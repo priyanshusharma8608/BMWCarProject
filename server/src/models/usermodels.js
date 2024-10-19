@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const { ValidName, Validemail, Validpassword, ValidMobile } = require('../validation/Validation')
 
+
 const userSchema = new mongoose.Schema({
     profileImg: { type: String, required: false, trim: true },
     name: {
