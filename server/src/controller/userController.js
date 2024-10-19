@@ -3,8 +3,9 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
 const { errorHandle } = require('../errorhandling/errorHandling');
 const usermodels = require('../models/usermodels');
+const nodemailer = require("nodemailer");
 const cloudinary = require('cloudinary').v2;
-require('dotenv').config()
+require('dotenv').config()  
 
 cloudinary.config({
     cloud_name: process.env.Cloudname,
@@ -18,14 +19,16 @@ module.exports.CreaterUser = async (req, res) => {
 
         const data = req.body;
         const img = req.file;
-        const imgURL = await cloudinary.uploader.upload(img.path)
        
-        if (data.password == undefined) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
-        if (data.role == 'admin' || data.role == 'shopkeeper') return res.status(400).send({ status: false, msg: 'Invalid Role' })
-
+       
+        if (!data.password) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
+        
+        if(img){
+            const imgURL = await cloudinary.uploader.upload(img.path)
+            req.body.profileImg = imgURL.secure_url;
+        }
         const passwordBcrypt = await bcrypt.hash(data.password, 10)
         req.body.password = passwordBcrypt
-        req.body.profileImg = imgURL.secure_url;
         req.body.role = 'user'
 
         const CreateUserDataDB = await UserModel.create(data)
@@ -56,6 +59,36 @@ module.exports.LogInUser = async (req, res) => {
             process.env.UserKey, { expiresIn: '12h' }
         )
 
+        const transporter = nodemailer.createTransport({
+            service: "gmail",
+            secure: true,
+            port: 465,
+            auth: {
+                user: process.env.NodeMailerId,
+                pass: process.env.Password
+            }
+        });
+        let randomOtp = Math.floor(1000 + Math.random() * 9999);
+        const info = await transporter.sendMail({
+            from: '"Ravi Singh :ghost::blush::two_hearts::blush:" <your-email@gmail.com>',
+            to: checkemail.email,
+            subject: "Your Email OTP to Reset Password on MoviesAll",
+            html: `
+            <div style="background-color:#16253D;padding:20px;color:#fff;font-family:Arial, sans-serif;border-radius:10px;">
+                <h2 style="color:#FF4500;">HACKERS</h2>
+                <p>Hi ${checkemail.name},</p>
+                <p>YO</p>
+                <div style="background-color:#fff;color:#000;font-size:24px;font-weight:bold;text-align:center;padding:10px;margin:20px 0;border-radius:5px;">
+                    ${randomOtp}
+                </div>
+                <p>The OTP is valid for 5 minutes.</p>
+                <p>For account safety, do not share your OTP with others.</p>
+                <br>
+                <p>Regards,</p>
+                <p>Team MoviesAll</p>
+            </div>
+            `,
+        });
         return res.status(200).send({ status: true, msg: "Successfully LogIn", token: token, UserId: checkemail._id })
         
     }
