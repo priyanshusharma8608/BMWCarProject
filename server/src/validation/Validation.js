@@ -15,5 +15,10 @@ const Validpassword = (Password)=>{
     return validPassword.test(Password)
 }
 
+const ValidMobile = (Password)=>{
+     const validPassword = /^([0|\+[0-9]{1,5})?([7-9][0-9]{9})$/
+    return validPassword.test(Password)
+}
 
-module.exports = { ValidName, Validemail, Validpassword}
+
+module.exports = { ValidName, Validemail, Validpassword, ValidMobile}

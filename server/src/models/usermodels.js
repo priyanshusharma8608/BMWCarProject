@@ -1,11 +1,15 @@
 const mongoose = require('mongoose');
-const { ValidName, Validemail, Validpassword } = require('../validation/Validation')
+const { ValidName, Validemail, Validpassword, ValidMobile } = require('../validation/Validation')
 
 const userSchema = new mongoose.Schema({
     profileImg: { type: String, required: false, trim: true },
     name: {
         type: String, required: [true, "Please Provide the Name"],
         validate: [ValidName, "Please Provided Valid Name"], trim: true
+    },
+    mobileNo: {
+        type: Number, required: [true, "Please Provide the Mobile No"],
+        validate: [ValidMobile, "Please Provided Valid Mobile Number"], trim: true
     },
     email: {
         type: String, required: [true, "Please Provide the Email-Id"],

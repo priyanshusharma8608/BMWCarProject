@@ -1,5 +1,5 @@
 const express = require('express')
-const { CreaterUser, LogInUser } = require('../controller/userController');
+const { CreaterUser, LogInUser, userUpadte, deleteUser } = require('../controller/userController');
 const { CreaterAdmin, getAllUserData } = require('../controller/AdminController');
 const { CreaterShopkeeper } = require('../controller/Shopkeeper');
 const multer = require('multer')
@@ -10,6 +10,8 @@ const router = express.Router()
 // User Api's
 router.post('/CreaterUser', upload.single(), CreaterUser)
 router.post('/LogInUser', upload.single(), LogInUser)
+router.put('/userUpadte/:id', upload.single(), userUpadte)
+router.delete('/deleteUser/:id', deleteUser)
 
 // Admin Api's
 router.post('/CreaterAdmin', upload.single(), CreaterAdmin)

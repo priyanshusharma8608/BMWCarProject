@@ -1,7 +1,8 @@
 const UserModel = require('../models/usermodels');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt')
-const { errorHandle } = require('../errorhandling/errorHandling')
+const { errorHandle } = require('../errorhandling/errorHandling');
+const usermodels = require('../models/usermodels');
 require('dotenv').config()
 
 
@@ -10,11 +11,11 @@ module.exports.CreaterUser = async (req, res) => {
 
         const data = req.body;
 
-        
-        if (data.password==undefined) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
-        if (data.role=='admin' || data.role=='shopkeeper') return res.status(400).send({ status: false, msg: 'Invalid Role' })
 
-        const passwordBcrypt = await bcrypt.hash(data.password, 10 )
+        if (data.password == undefined) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
+        if (data.role == 'admin' || data.role == 'shopkeeper') return res.status(400).send({ status: false, msg: 'Invalid Role' })
+
+        const passwordBcrypt = await bcrypt.hash(data.password, 10)
         req.body.password = passwordBcrypt
         req.body.role = 'user'
 
@@ -31,20 +32,12 @@ module.exports.LogInUser = async (req, res) => {
 
         const data = req.body;
 
-        if (Object.keys(data).length == 0) return res.status(400).send({ status: false, msg: 'Pls Provided Body Data' })
+        if (data.password == undefined) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
 
-        const { email, password } = data;
-
-        if (!email) return res.status(400).send({ status: false, msg: 'Pls Provided email' })
-        if (!Validemail(email)) return res.status(400).send({ status: false, msg: 'Invalid Email Provided Valid Email' })
-
-        if (!password) return res.status(400).send({ status: false, msg: 'Pls Provided Password' })
-        if (!Validpassword(password)) return res.status(400).send({ status: false, msg: 'Invalid password Provided one Upper Case, Symbol, Number and LowerCase, min Length is 8' })
-
-        const checkemail = await UserModel.findOne({ email: email })
+        const checkemail = await UserModel.findOne({ email: data.email })
         if (!checkemail) return res.status(404).send({ status: false, msg: 'User not found pls SignUp first' })
 
-        const CheckPass = await bcrypt.compare(password, checkemail.password)
+        const CheckPass = await bcrypt.compare(data.password, checkemail.password)
         if (!CheckPass) return res.status(400).send({ status: false, msg: 'wrong Pasword pls Insert Correct Password' })
 
         const token = jwt.sign({
@@ -55,16 +48,47 @@ module.exports.LogInUser = async (req, res) => {
         )
 
         return res.status(200).send({ status: true, msg: "Successfully LogIn", token: token, UserId: checkemail._id })
-
+        
     }
-    catch (error) { return res.status(500).send({ status: false, msg: error.message }) }
+    catch (error) { return errorHandle(error, res) }
 }
 
 
 
+module.exports.userUpadte = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const data = req.body
+        
+        const getUser = await UserModel.findOneAndUpdate({ _id: id },
+            {
+                $set: { name: data.name,mobileNo:data.mobileNo }
+            },
+            { new: true }
+        )
+        return res.status(200).send({ status: true, msg: "Successfully Updated", data:getUser })
+    
+    }
+    catch (error) { return errorHandle(error, res) }
+}
 
+module.exports.deleteUser = async (req, res) => {
+    try {
+        const id = req.params.id;
+        
+        const getUser = await UserModel.findOneAndUpdate({ _id: id },
+            {
+                $set: { isDelete: true }
+            },
+            { new: true }
+        )
 
-
+      
+        return res.status(200).send({ status: true, msg: "Successfully User Deleted", data:getUser })
+    
+    }
+    catch (error) { return errorHandle(error, res) }
+}
 
 
 
