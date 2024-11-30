@@ -3,6 +3,7 @@ const { ValidName, Validemail, Validpassword, ValidMobile } = require('../valida
 
 module.exports.UserValition = (req, res, next)=>{
     try {
+        
         const data = req.body;
         const { email, name, password } = data;
 

@@ -9,6 +9,7 @@ require('dotenv').config()
 
 module.exports.CreaterUser = async (req, res) => {
     try {
+        
         const data = req.body;
         const img = req.file;
         const { email, name, password } = data
